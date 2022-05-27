@@ -20,16 +20,7 @@ public class EmployeePayrollService {
         EmployeePayrollService.employeePayrollList = employeePayrollList;
     }
 
-    public static void main(String[] args) {
-        System.out.println("Welcome to Payroll Service.");
-        ArrayList<EmployeePayroll> employeePayrollList = new ArrayList<>();
-        EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
-        employeePayrollService.readEmployeePayrollData();
-        employeePayrollService.writeEmployeePayrollData();
-
-    }
-
-    private void readEmployeePayrollData(){
+    public void readEmployeePayrollData(){
         System.out.println("Enter Employee ID: ");
         int id = input.nextInt();
         System.out.println("Enter Employee Name: ");
@@ -39,7 +30,29 @@ public class EmployeePayrollService {
         employeePayrollList.add(new EmployeePayroll(id,name,salary));
     }
 
-    private void writeEmployeePayrollData(){
-        System.out.println("\n Writing Employee Payroll to Console\n "+ employeePayrollList);
+    public void writeEmployeePayrollData(IOService ioService){
+        if (ioService.equals(IOService.CONSOLE_IO))
+            System.out.println("\n Writing Employee Payroll to Console\n "+ employeePayrollList);
+        else
+            new EmployeePayrollFileIOService().writeData(employeePayrollList);
+    }
+
+    public void printData(IOService ioService) {
+        if (ioService.equals(IOService.FILE_IO))
+            new EmployeePayrollFileIOService().printData();
+    }
+
+    public long countEntries(IOService ioService) {
+        if (ioService.equals(IOService.FILE_IO))
+            return new EmployeePayrollFileIOService().countEntries();
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to Payroll Service.");
+        ArrayList<EmployeePayroll> employeePayrollList = new ArrayList<>();
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
+        employeePayrollService.readEmployeePayrollData();
+        employeePayrollService.writeEmployeePayrollData(IOService.FILE_IO);
     }
 }
